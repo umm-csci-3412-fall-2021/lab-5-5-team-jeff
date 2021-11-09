@@ -1,6 +1,12 @@
 package xrate;
 
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * Provide access to basic currency exchange rate services.
@@ -8,6 +14,7 @@ import java.io.IOException;
 public class ExchangeRateReader {
 
     private String accessKey;
+    private String baseURL;
 
     /**
      * Construct an exchange rate reader using the given base URL. All requests will
@@ -27,6 +34,8 @@ public class ExchangeRateReader {
          * accessible in the two key functions. (You'll need it there to construct
          * the full URL.)
          */
+
+        this.baseURL = baseURL;
 
         // TODO Your code here
 
@@ -84,10 +93,33 @@ public class ExchangeRateReader {
          *       currency code from the "rates" object. 
          */
 
-        // TODO Your code here
+        String checkedMonth = String.valueOf(month);
 
-        // Remove the next line when you've implemented this method.
-        throw new UnsupportedOperationException();
+        String checkedDay = String.valueOf(day);
+
+        if(checkedMonth.length() == 1){
+
+            checkedMonth = "0" + checkedMonth;
+
+        }
+
+        if(checkedDay.length() == 1){
+
+            checkedDay = "0" + checkedDay;
+
+        }
+
+        
+        String newURL = baseURL + String.valueOf(year) + "-" + checkedMonth + "-" + checkedDay;
+        URL url = new URL(newURL);
+        InputStream inputStream = url.openStream();
+
+        JSONTokener token = new JSONTokener(inputStream);
+        JSONObject obj = new JSONObject(token);
+
+        return obj.getJSONObject("rates").getFloat(currencyCode);
+
+        
     }
 
     /**
@@ -116,7 +148,33 @@ public class ExchangeRateReader {
         
         // TODO Your code here
 
-        // Remove the next line when you've implemented this method.
-        throw new UnsupportedOperationException();
+
+        String checkedMonth = String.valueOf(month);
+
+        String checkedDay = String.valueOf(day);
+
+        if(checkedMonth.length() == 1){
+
+            checkedMonth = "0" + checkedMonth;
+
+        }
+
+        if(checkedDay.length() == 1){
+
+            checkedDay = "0" + checkedDay;
+
+        }
+
+        
+        String newURL = baseURL + String.valueOf(year) + "-" + checkedMonth + "-" + checkedDay + "?access_key=" + accessKey;
+        URL url = new URL(newURL);
+        InputStream inputStream = url.openStream();
+
+        JSONTokener token = new JSONTokener(inputStream);
+        JSONObject obj = new JSONObject(token);
+
+        return obj.getJSONObject("rates").getFloat(fromCurrency) / obj.getJSONObject("rates").getFloat(toCurrency);
+
+        
     }
 }
