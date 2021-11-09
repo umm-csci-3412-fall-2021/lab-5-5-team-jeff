@@ -166,7 +166,7 @@ public class ExchangeRateReader {
         }
 
         
-        String newURL = baseURL + String.valueOf(year) + "-" + checkedMonth + "-" + checkedDay;
+        String newURL = baseURL + String.valueOf(year) + "-" + checkedMonth + "-" + checkedDay + "?access_key=" + accessKey;
         URL url = new URL(newURL);
         InputStream inputStream = url.openStream();
 
