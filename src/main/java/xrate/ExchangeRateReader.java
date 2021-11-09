@@ -148,9 +148,33 @@ public class ExchangeRateReader {
         
         // TODO Your code here
 
-        
 
-        // Remove the next line when you've implemented this method.
-        throw new UnsupportedOperationException();
+        String checkedMonth = String.valueOf(month);
+
+        String checkedDay = String.valueOf(day);
+
+        if(checkedMonth.length() == 1){
+
+            checkedMonth = "0" + checkedMonth;
+
+        }
+
+        if(checkedDay.length() == 1){
+
+            checkedDay = "0" + checkedDay;
+
+        }
+
+        
+        String newURL = baseURL + String.valueOf(year) + "-" + checkedMonth + "-" + checkedDay;
+        URL url = new URL(newURL);
+        InputStream inputStream = url.openStream();
+
+        JSONTokener token = new JSONTokener(inputStream);
+        JSONObject obj = new JSONObject(token);
+
+        return obj.getJSONObject("rates").getFloat(fromCurrency) / obj.getJSONObject("rates").getFloat(toCurrency);
+
+        
     }
 }
